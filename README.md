@@ -7,6 +7,9 @@ works across a group chat — is not enough.
 
 ![Five characters on the Character Stage, each showing the expression matched to the reply](docs/stage.jpg)
 
+Install from SillyTavern's **Extensions** menu → **Install Extension**, pasting
+`https://github.com/Kagenou-Eta/CharacterStage` as the Git URL.
+
 ## What it does
 
 - **Roster from lorebooks.** Scans the active (or selected) lorebooks for
@@ -67,18 +70,6 @@ Useful links: [model card](https://huggingface.co/convaiinnovations/laya) ·
 [GitHub](https://github.com/NandhaKishorM/laya) ·
 [docs](https://nandhakishorm.github.io/laya/) ·
 [PyPI](https://pypi.org/project/laya/)
-
-## Install
-
-Copy or clone this folder into your SillyTavern user extensions directory:
-
-```bash
-cd "<SillyTavern>/data/default-user/extensions"
-git clone https://github.com/Kagenou-Eta/CharacterStage.git
-```
-
-Then reload SillyTavern. The settings appear as their own **Character Stage** accordion in the
-Extensions drawer.
 
 ## Settings
 
