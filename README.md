@@ -5,7 +5,7 @@ System One model (Laya). Built for a workflow where one blank character card is 
 every character lives in a lorebook, so SillyTavern's native sprite support — which only
 works across a group chat — is not enough.
 
-![CharacterStage showing four characters on stage](docs/stage.jpg)
+![Five characters on the Character Stage, each showing the expression matched to the reply](docs/stage.jpg)
 
 ## What it does
 
