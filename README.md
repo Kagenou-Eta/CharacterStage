@@ -29,8 +29,9 @@ works across a group chat — is not enough.
 ## Requirements
 
 - [SillyTavern](https://github.com/SillyTavern/SillyTavern) — developed and tested against 1.19.0.
-- Laya running locally and reachable from the browser. The browser cannot call Laya directly
-  (the server sends no CORS headers), so run the bundled proxy — see `proxy/`.
+- [Laya](https://huggingface.co/convaiinnovations/laya) running locally and reachable from the
+  browser. The browser cannot call Laya directly (the server sends no CORS headers), so run the
+  bundled proxy — see [`proxy/`](proxy/).
 
   ```bash
   python3 proxy/laya-cors-proxy.py      # serves 127.0.0.1:8766 -> 127.0.0.1:8765
@@ -42,6 +43,30 @@ works across a group chat — is not enough.
   `anger`, `aroused`, `embarrassment`, `happy`, `neutral`, `profile`, `sadness`, `surprise`.
   Sets that ship the 28-label GoEmotions set are mapped onto these labels automatically
   (`joy` → `happy`, `annoyance` → `anger`, …).
+
+## About Laya
+
+[Laya](https://huggingface.co/convaiinnovations/laya) is a non-autoregressive System 1 decision
+model from Convai Innovations: give it a state (text, email, ticket, JSON) and typed questions,
+and it returns typed answers with calibrated probabilities in a single forward pass — around
+33 ms on a T4 — across 100+ languages. It never generates text, so there is nothing to parse
+and nothing to hallucinate, which is exactly what an expression picker needs.
+
+This extension uses the self-hosted HTTP server rather than the Python SDK, so any
+Jev-compatible `/v1/systemone` endpoint works. A minimal setup:
+
+```bash
+pip install "laya[serve]"
+LAYA_DEVICE=cuda LAYA_PRELOAD=1 laya-serve     # 0.0.0.0:8000, preloads the checkpoints
+```
+
+Set `LAYA_HOST=127.0.0.1 LAYA_PORT=8765` to match the proxy's default upstream. Copy
+`laya.env` style settings into a systemd unit if you want it to start with your session.
+
+Useful links: [model card](https://huggingface.co/convaiinnovations/laya) ·
+[GitHub](https://github.com/NandhaKishorM/laya) ·
+[docs](https://nandhakishorm.github.io/laya/) ·
+[PyPI](https://pypi.org/project/laya/)
 
 ## Install
 
@@ -74,11 +99,33 @@ Extensions drawer.
 
 ## How expression picking works
 
-Each label is asked as its own question (`"the focus character is angry or glaring"`) rather
-than as a single choice head; both heads are blended 50/50. On the local probe set that raised
-accuracy from 9/12 to 10/12 for the whole cast at roughly 50 ms per cast. The whole cast is
-classified in one `/v1/systemone/batch` request, with a per-character fallback if the batch
-fails.
+Each assistant turn is classified in one `/v1/systemone/batch` request (about 50 ms for five
+characters), with a per-character fallback if the batch fails. Per character, two kinds of
+question are asked at once and blended 50/50:
+
+- one `choice` question with every expression label as a criterion, and
+- one `noul` question per label — `"Is this true of the focus character in the scene? the focus
+  character is angry or glaring"`.
+
+Laya's [model card](https://huggingface.co/convaiinnovations/laya) documents two failure modes
+this pairing works around:
+
+- **High-cardinality choice questions** share a fixed token budget (`head_max_len`, 192 on the
+  English checkpoint by default), so many options leave each label only a few tokens and the
+  labels stop being distinguishable. Seven labels is still fine, but the `noul` questions use
+  the budget better.
+- **`noul` can latch onto its own `false:`/`true:` labels** instead of reading the state. Since
+  the two primitives fail differently, blending them lets either one carry the answer — that is
+  what raised accuracy from 9/12 to 10/12 on the local probe set.
+
+A small cue list catches the unambiguous physical signs of crying (tears, a cracking voice) and
+biases towards `sadness`, because those lines otherwise get read as `happy`.
+
+**On calibration:** Laya ships over-confident — the model card reports ECE 0.466 before
+temperature fitting, 0.081 after. The extension's *Minimum confidence* gate defaults to `0.2`
+rather than a high value for that reason: the raw number is a relative ranking between labels,
+not a literal probability, so gating aggressively would throw away correct answers. Fit
+temperatures on your own data if you want the number to mean what it says.
 
 ## Files
 
@@ -87,6 +134,13 @@ fails.
 - `settings.html` — settings block injected into the Extensions drawer
 - `manifest.json` — extension manifest
 - `proxy/laya-cors-proxy.py` — dependency-free CORS proxy for the Laya server
+- `proxy/laya-cors.service` — systemd user unit for the proxy
+
+## Credits
+
+- [Laya](https://huggingface.co/convaiinnovations/laya) by Convai Innovations (Apache 2.0) —
+  the System 1 decision model.
+- [SillyTavern](https://github.com/SillyTavern/SillyTavern) — the host application.
 
 ## License
 

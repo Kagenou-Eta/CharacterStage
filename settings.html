@@ -37,10 +37,11 @@
                 <div class="cs-section-title">Laya</div>
                 <label for="cs_laya_url">Proxy URL</label>
                 <input type="text" id="cs_laya_url" class="text_pole" placeholder="http://127.0.0.1:8766">
-                <small>The CORS proxy in front of the Laya server (see <code>~/laya/laya-cors-proxy.py</code>). The browser cannot call <code>:8765</code> directly.</small>
+                <small>The CORS proxy in front of the Laya server (see <code>proxy/laya-cors-proxy.py</code> in the extension). The browser cannot call <code>:8765</code> directly.</small>
 
                 <label for="cs_laya_model">Model override (optional)</label>
                 <input type="text" id="cs_laya_model" class="text_pole" placeholder="english / multilingual - empty means auto">
+                <small>Laya ships an English checkpoint plus a multilingual one; leave empty to let its router choose by language.</small>
 
                 <label for="cs_min_confidence">Minimum confidence</label>
                 <input type="number" id="cs_min_confidence" class="text_pole" min="0" max="1" step="0.05">
