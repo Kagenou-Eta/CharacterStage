@@ -28,7 +28,7 @@ works across a group chat — is not enough.
 
 ## Requirements
 
-- [SillyTavern](https://github.com/SillyTavern/SillyTavern) 1.13+ (tested on 1.19 staging).
+- [SillyTavern](https://github.com/SillyTavern/SillyTavern) — developed and tested against 1.19.0.
 - Laya running locally and reachable from the browser. The browser cannot call Laya directly
   (the server sends no CORS headers), so run the bundled proxy — see `proxy/`.
 
