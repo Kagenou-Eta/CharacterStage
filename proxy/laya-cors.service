@@ -1,0 +1,16 @@
+[Unit]
+Description=CORS proxy for the Laya decision server (browser access)
+After=network-online.target laya.service
+Wants=network-online.target laya.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+# Point ExecStart at wherever you keep laya-cors-proxy.py.
+WorkingDirectory=%h/laya
+ExecStart=/usr/bin/python3 %h/laya/laya-cors-proxy.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

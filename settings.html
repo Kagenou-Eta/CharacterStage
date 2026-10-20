@@ -1,0 +1,82 @@
+<div class="cs-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>Character Stage</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down interactable" tabindex="0" role="button"></div>
+        </div>
+
+        <div class="inline-drawer-content">
+            <div class="cs-settings-body">
+                <small>Show sprites of any character in any chat, with expressions picked by the local Laya model.</small>
+
+                <label class="checkbox_label" for="cs_enabled">
+                    <input type="checkbox" id="cs_enabled">
+                    <span>Enable the sprite stage</span>
+                </label>
+
+                <label class="checkbox_label" for="cs_auto_expressions">
+                    <input type="checkbox" id="cs_auto_expressions">
+                    <span>Change expressions automatically (Laya)</span>
+                </label>
+
+                <label class="checkbox_label" for="cs_auto_cast">
+                    <input type="checkbox" id="cs_auto_cast">
+                    <span>Put characters on stage when their name appears in the reply</span>
+                </label>
+
+                <label class="checkbox_label" for="cs_dim_inactive">
+                    <input type="checkbox" id="cs_dim_inactive">
+                    <span>Dim characters who are not in the current reply</span>
+                </label>
+
+                <label class="checkbox_label" for="cs_cue_hints">
+                    <input type="checkbox" id="cs_cue_hints">
+                    <span>Prefer sadness when the text describes crying or a breaking voice</span>
+                </label>
+
+                <div class="cs-section-title">Laya</div>
+                <label for="cs_laya_url">Proxy URL</label>
+                <input type="text" id="cs_laya_url" class="text_pole" placeholder="http://127.0.0.1:8766">
+                <small>The CORS proxy in front of the Laya server (see <code>~/laya/laya-cors-proxy.py</code>). The browser cannot call <code>:8765</code> directly.</small>
+
+                <label for="cs_laya_model">Model override (optional)</label>
+                <input type="text" id="cs_laya_model" class="text_pole" placeholder="english / multilingual - empty means auto">
+
+                <label for="cs_min_confidence">Minimum confidence</label>
+                <input type="number" id="cs_min_confidence" class="text_pole" min="0" max="1" step="0.05">
+                <small>Below this, the current expression is kept.</small>
+
+                <div class="cs-row">
+                    <div id="cs_test" class="menu_button">Test Laya</div>
+                    <div id="cs_reclassify_settings" class="menu_button">Reclassify now</div>
+                </div>
+
+                <div class="cs-section-title">Layout</div>
+                <label for="cs_max_sprites">Maximum characters on stage</label>
+                <input type="number" id="cs_max_sprites" class="text_pole" min="1" max="8" step="1">
+
+                <label for="cs_sprite_height">Sprite height (% of window)</label>
+                <input type="number" id="cs_sprite_height" class="text_pole" min="20" max="100" step="1">
+                <small>Sprites are anchored to the bottom edge of the window and the chat panel covers their lower half, like native Visual Novel mode. 90 matches that look.</small>
+
+                <label for="cs_stickiness">Extra turns a character stays without being mentioned</label>
+                <input type="number" id="cs_stickiness" class="text_pole" min="0" max="10" step="1">
+
+                <label for="cs_excerpt_chars">Text sent to Laya per character (characters)</label>
+                <input type="number" id="cs_excerpt_chars" class="text_pole" min="400" max="12000" step="100">
+
+                <div class="cs-section-title">Roster</div>
+                <label for="cs_world_books">Lorebooks to scan</label>
+                <select id="cs_world_books" class="text_pole" multiple size="6"></select>
+                <small>Leave empty to use the lorebooks active in the current chat.</small>
+                <div id="cs_scan" class="menu_button">Scan lorebooks for characters</div>
+
+                <label for="cs_roster">Roster (one per line: <code>Display Name | Sprite Folder | alias, alias</code>)</label>
+                <textarea id="cs_roster" class="text_pole" rows="10" placeholder="Adrian | Adrian Cho | Adrian Cho, Addy"></textarea>
+                <small>The sprite folder is the folder inside <code>data/default-user/characters/</code> that holds the expression images.</small>
+
+                <div id="cs_status" class="cs-status"></div>
+            </div>
+        </div>
+    </div>
+</div>

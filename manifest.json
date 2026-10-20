@@ -1,0 +1,15 @@
+{
+    "display_name": "Character Stage (Laya)",
+    "loading_order": 20,
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "Kagenou-Eta",
+    "version": "1.0.0",
+    "homePage": "https://github.com/Kagenou-Eta/CharacterStage",
+    "auto_update": false,
+    "hooks": {
+        "activate": "init"
+    }
+}
