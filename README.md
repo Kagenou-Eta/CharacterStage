@@ -42,6 +42,20 @@ Install from SillyTavern's **Extensions** menu → **Install Extension**, pastin
 
   Default proxy URL is `http://127.0.0.1:8766`, configurable in the settings.
 
+  Run the proxy in a terminal and it prints one line per character classified — the excerpt
+  that went to Laya, the label that came back, its confidence and token count — so you can
+  watch the classification during a chat:
+
+  ```text
+  [13:04:12] -> batch 2 states  1.1 KB  8 questions each  model=auto
+  [13:04:12]    in 1: Adrian Cho  Adrian Cho leaned against the lockers and sighed. "Whatev...
+  [13:04:12] <- Adrian Cho           anger          0.93  38 tok
+  [13:04:12] <- Maddy Katherine      embarrassment  0.92  41 tok
+  ```
+
+  Set `LAYA_PROXY_VERBOSE=0` for bare access lines, or `LAYA_PROXY_FULL_STATE=1` to print
+  whole state strings. See [`proxy/`](proxy/) for details.
+
   Laya loads a model into VRAM, so most people will not want it running all the time. Either
   start it by hand when you need expressions, or drive both processes from a small wrapper
   script — this one waits until the proxy answers healthy before returning:
