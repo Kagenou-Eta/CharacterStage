@@ -42,6 +42,22 @@ Install from SillyTavern's **Extensions** menu → **Install Extension**, pastin
 
   Default proxy URL is `http://127.0.0.1:8766`, configurable in the settings.
 
+  Laya loads a model into VRAM, so most people will not want it running all the time. Either
+  start it by hand when you need expressions, or drive both processes from a small wrapper
+  script — this one waits until the proxy answers healthy before returning:
+
+  ```bash
+  case "${1:-start}" in
+      start)   systemctl --user start laya.service laya-cors.service ;;
+      stop)    systemctl --user stop laya-cors.service laya.service ;;
+      restart) systemctl --user stop laya-cors.service laya.service
+               systemctl --user start laya.service laya-cors.service ;;
+  esac
+  ```
+
+  Leave both units **disabled** if you only want them on demand; `systemctl --user enable`
+  would start them at login instead.
+
 - Character folders with expression images named after SillyTavern's noun-form convention:
   `anger`, `aroused`, `embarrassment`, `happy`, `neutral`, `profile`, `sadness`, `surprise`.
   Sets that ship the 28-label GoEmotions set are mapped onto these labels automatically
